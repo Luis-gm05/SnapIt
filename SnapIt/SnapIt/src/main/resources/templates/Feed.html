@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feed - SnapIt</title>
+    <link rel="icon" href="snapit-logo.svg" sizes="any" type="image/svg+xml">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+      .like-btn {
+        transition: all .1s linear;
+        transition: scale .05s linear;
+        stroke:rgb(0, 0, 0);
+      }
+
+      .like-btn:hover {
+        cursor: pointer;
+      }
+
+      .like-btn-enabled {
+        cursor: pointer;
+        fill: rgb(255, 31, 31) !important;
+        stroke:rgb(200, 0, 0);
+      }
+
+      .like-btn:active {
+          scale: 1.25;
+      }
+    </style>
+</head>
+
+<body class="container-fluid">
+  <!-- Navbar -->
+  <div class="row">
+    <nav class="navbar navbar-light bg-light justify-content-between fixed-top col-sm z-1">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/feed">
+          <img src="snapit-logo.svg" class="me-1">
+          <h2 class="d-inline"><strong>SnapIt</strong></h2>
+        </a>
+        <!-- Publish modal trigger -->
+
+        <form class="d-flex" role="search">
+          <button type="button" class="btn btn-primary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#publishModal">
+            <img src="plus-symbol.svg" class="me-2" width="30px" height="30px">
+            <span>Publicar</span>
+          </button>
+          
+          <div class="vr mx-4"></div>
+          <!-- Input para el nombre de usuario -->
+          <input class="form-control me-2" type="search" id="nombreUsuario" placeholder="Nombre de usuario" required>
+
+          <!-- Enlace de búsqueda -->
+          <a href="#" onclick="buscarPerfil()" class="btn btn-primary d-flex align-items-center">
+              <img width="28px" height="28px" class="me-2" src="search-symbol.svg">
+              <svg fill="#ffffff" viewBox="-2 0 19 19" xmlns="http://www.w3.org/2000/svg" class="cf-icon-svg">
+                <g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                <g id="SVGRepo_iconCarrier"><path d="M14.147 15.488a1.112 1.112 0 0 1-1.567 0l-3.395-3.395a5.575 5.575 0 1 1 1.568-1.568l3.394 3.395a1.112 1.112 0 0 1 0 1.568zm-6.361-3.903a4.488 4.488 0 1 0-1.681.327 4.443 4.443 0 0 0 1.68-.327z"></path></g>
+              </svg>
+              <span>Buscar</span>
+          </a>
+        </form>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Feed -->
+  <div class="row" style="margin-top: 5rem;">
+    <!-- Sidebar -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary fixed-top z-0 h-100" style="width: 250px;">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <span class="fs-4">Sidebar</span>
+      </a>
+      <hr class="mt-4">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <a href="./feed" class="nav-link active px-1">
+          <div class="d-flex align-items-center nav-item nav-link active">
+              <img src="home-symbol-white.svg" height="23px" class="me-2">
+              Inicio
+          </div>
+        </a>
+
+        <a th:href="@{/profile/{id}(id=${usuario.id})}" class="d-flex align-items-center nav-item nav-link">
+          <img src="person-symbol-black.svg" height="25px" class="me-2">
+          <div class="nav-link link-body-emphasis px-1">
+            <span>Perfil</span>
+          </div>
+        </a>
+      </ul>
+      
+      <hr>
+
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+          <img th:src="'data:image/jpeg;base64,'+ ${usuario.foto}" width="32" height="32" class="border border-2 border-primary rounded-circle me-2">
+          <strong><span th:text="${usuario.nombreUsuario}"></span></strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+          <a class="dropdown-item text-danger" href="/logout">Cerrar sesión</a>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="col-lg d-flex flex-column justify-content-center align-items-center">
+      <!-- Publish modal -->
+      <div class="modal fade" id="publishModal" tabindex="-1">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="publishModalLabel">Crear publicación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <form th:action="@{/publicar}" th:object="${nuevaPublicacion}" method="post" enctype="multipart/form-data">
+                <div>
+                  <label for="formFile" class="form-label">Foto</label>
+                  <input class="form-control" type="file" id="formFile" name="fotoFile" required>
+                </div>
+                <div class="mb-3">
+                  <label for="recipient-name" class="col-form-label">Título:</label>
+                  <input type="text" class="form-control" id="recipient-name" th:field="*{texto1}" required>
+                </div>
+                <div class="mb-3">
+                  <label for="message-text" class="col-form-label">Descripción:</label>
+                  <textarea class="form-control" id="message-text" th:field="*{texto2}" required></textarea>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                  <button type="submit" class="btn btn-primary">Publicar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Posts -->
+      <section th:each="publicacion, iterStat : ${publicaciones}" class="card mt-4" style="width: 18rem; margin-left: 10vw;">
+        <header style="height: 3rem; padding: 0.5rem;">
+          <a th:href="@{/profile/{id}(id=${publicacion.perfil.id})}" class="text-decoration-none">
+            <img th:src="'data:image/jpeg;base64,'+ ${publicacion.perfil.foto}" class="d-inline border border-2 border-primary rounded-circle h-100 object-fit-cover">
+            <p class="d-inline text-dark">&nbsp<span th:text="${publicacion.perfil.nombreUsuario}"></span></p>
+          </a>
+          <div class="dropdown d-inline float-end">
+            <img type="button" data-bs-toggle="dropdown" src="three-dots-menu.svg">
+            <ul class="dropdown-menu">
+              <li>
+                <a th:href="'data:image/jpeg;base64,'+ ${publicacion.foto}" target="_blank" class="text-decoration-none">
+                  <button class="dropdown-item">Ver imagen</button>
+                </a>
+              </li>
+              <li>
+                <!-- Evita que salga la opción de eliminar para otros usuarios -->
+                <form th:if="${usuario.id == publicacion.perfil.id}" th:action="@{/eliminar/{publicacionId}(publicacionId=${publicacion.id})}" method="post" style="display:inline;">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <button type="submit" class="dropdown-item text-danger">Eliminar</button>
+                </form>
+              </li>
+            </ul>
+          </div>
+        </header>
+        <main>
+          <a th:href="'data:image/jpeg;base64,'+ ${publicacion.foto}" target="_blank">
+            <img th:src="'data:image/jpeg;base64,'+ ${publicacion.foto}" class="card-img-top object-fit-cover">
+          </a>
+        </main>
+        <footer class="card-body">
+          <h5 th:text="${publicacion.texto1}" class="card-title d-inline fw-bold">Texto principal de la foto</h5>
+          <div class="d-flex flex-column float-end align-items-center">
+            <p class="align-self-center mb-1" data-likes="" id="like-count-${iterStat.index}">0</p>
+            <svg class="like-btn" width="1.6rem" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M12 6.00019C10.2006 3.90317 7.19377 3.2551 4.93923 5.17534C2.68468 7.09558 2.36727 10.3061 4.13778 12.5772C5.60984 14.4654 10.0648 18.4479 11.5249 19.7369C11.6882 19.8811 11.7699 19.9532 11.8652 19.9815C11.9483 20.0062 12.0393 20.0062 12.1225 19.9815C12.2178 19.9532 12.2994 19.8811 12.4628 19.7369C13.9229 18.4479 18.3778 14.4654 19.8499 12.5772C21.6204 10.3061 21.3417 7.07538 19.0484 5.17534C16.7551 3.2753 13.7994 3.90317 12 6.00019Z" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <br style="line-height: 2rem;">
+          <p th:text="${publicacion.texto2}" class="card-text d-inline">Texto secundario de la foto</p>
+        </footer>
+      </section>
+    </div>
+  </div>
+</body>
+
+<script>
+  // Cambia el estilo del corazón al ser pulsado
+  for (let likeBtn of document.getElementsByClassName("like-btn")) {
+  likeBtn.parentElement.getElementsByTagName("p")[0].textContent = parseInt(Math.random() * 10);
+  likeBtn.addEventListener("click", event => {
+    const likeCountElem = likeBtn.parentElement.getElementsByTagName("p")[0];
+    let likeCount = likeCountElem.textContent;
+
+    if (!likeBtn.classList.contains("like-btn-enabled")) {
+      likeBtn.classList.add("like-btn-enabled");
+      likeCountElem.textContent = parseInt(likeCountElem.textContent) + 1;
+    } else {
+      likeBtn.classList.remove("like-btn-enabled");
+      likeCountElem.textContent = parseInt(likeCountElem.textContent) - 1;
+    }
+    likeCountElem.setAttribute("data-likes", likeCount);
+  });
+}
+
+
+  function buscarPerfil() {
+    var nombreUsuario = document.getElementById('nombreUsuario').value;
+    if (nombreUsuario) {
+      window.location.href = `/profile/search/${nombreUsuario}`;
+    }
+  }
+</script>
+</html>

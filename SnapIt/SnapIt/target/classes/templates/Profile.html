@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${nombre} + ' - SnapIt'"></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <link rel="icon" href="snapit-logo.svg" sizes="any" type="image/svg+xml">
+    <title>Perfil</title>
+</head>
+<script>
+  function buscarPerfil() {
+    var nombreUsuario = document.getElementById('nombreUsuario').value;
+    console.log(nombreUsuario);
+    if (nombreUsuario) {
+      window.location.href = `/profile/search/${nombreUsuario}`;
+    }
+  }
+</script>
+<body class="container-fluid">
+  <!-- Navbar -->
+  <div class="row">
+    <nav class="navbar navbar-light bg-light justify-content-between fixed-top col-sm z-1">
+      <div class="container-fluid">
+        <a class="navbar-brand d-flex align-items-center" href="/feed">
+          <svg class="d-inline me-1" viewBox="0 0 25 25" width="50px" height="50px" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 16C13.6569 16 15 14.6569 15 13C15 11.3431 13.6569 10 12 10C10.3431 10 9 11.3431 9 13C9 14.6569 10.3431 16 12 16Z" stroke="#000000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M3 16.8V9.2C3 8.0799 3 7.51984 3.21799 7.09202C3.40973 6.71569 3.71569 6.40973 4.09202 6.21799C4.51984 6 5.0799 6 6.2 6H7.25464C7.37758 6 7.43905 6 7.49576 5.9935C7.79166 5.95961 8.05705 5.79559 8.21969 5.54609C8.25086 5.49827 8.27836 5.44328 8.33333 5.33333C8.44329 5.11342 8.49827 5.00346 8.56062 4.90782C8.8859 4.40882 9.41668 4.08078 10.0085 4.01299C10.1219 4 10.2448 4 10.4907 4H13.5093C13.7552 4 13.8781 4 13.9915 4.01299C14.5833 4.08078 15.1141 4.40882 15.4394 4.90782C15.5017 5.00345 15.5567 5.11345 15.6667 5.33333C15.7216 5.44329 15.7491 5.49827 15.7803 5.54609C15.943 5.79559 16.2083 5.95961 16.5042 5.9935C16.561 6 16.6224 6 16.7454 6H17.8C18.9201 6 19.4802 6 19.908 6.21799C20.2843 6.40973 20.5903 6.71569 20.782 7.09202C21 7.51984 21 8.0799 21 9.2V16.8C21 17.9201 21 18.4802 20.782 18.908C20.5903 19.2843 20.2843 19.5903 19.908 19.782C19.4802 20 18.9201 20 17.8 20H6.2C5.0799 20 4.51984 20 4.09202 19.782C3.71569 19.5903 3.40973 19.2843 3.21799 18.908C3 18.4802 3 17.9201 3 16.8Z" stroke="#000000" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <h2 class="d-inline"><strong>SnapIt</strong></h2>
+        </a>
+        <form class="d-flex" role="search">
+          <button type="button" class="btn btn-secondary d-flex align-items-center" data-bs-toggle="modal" data-bs-target="#publishModal" disabled>
+            <svg class="me-2" width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 12H18M12 6V18" stroke="#ffffff" stroke-width="3.0" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Publicar</span>
+          </button>
+          <div class="vr mx-4"></div>
+          <input class="form-control me-2" type="search" id="nombreUsuario" placeholder="Nombre de usuario" required>
+          <a href="#" onclick="buscarPerfil()" class="btn btn-primary d-flex align-items-center">
+              <svg fill="#ffffff" viewBox="-2 0 19 19" xmlns="http://www.w3.org/2000/svg" height="28px" width="28px" class="cf-icon-svg me-2"><path d="M14.147 15.488a1.112 1.112 0 0 1-1.567 0l-3.395-3.395a5.575 5.575 0 1 1 1.568-1.568l3.394 3.395a1.112 1.112 0 0 1 0 1.568zm-6.361-3.903a4.488 4.488 0 1 0-1.681.327 4.443 4.443 0 0 0 1.68-.327z"></path></svg>
+              <span>Buscar</span>
+          </a>
+        </form>
+      </div>
+    </nav>
+  </div>
+
+  <!-- Feed -->
+  <div class="row" style="margin-top: 5rem;">
+    <!-- Sidebar -->
+    <div class="d-flex flex-column flex-shrink-0 p-3 bg-body-tertiary fixed-top z-0 h-100" style="width: 250px;">
+      <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+        <span class="fs-4">Sidebar</span>
+      </a>
+      <hr class="mt-4">
+      <ul class="nav nav-pills flex-column mb-auto">
+        <a href="/feed" class="d-flex align-items-center nav-item nav-link">
+          <svg version="1.0" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" height="23px" class="me-2" viewBox="0 0 64 64" enable-background="new 0 0 64 64" xml:space="preserve">
+          <path fill="#000000" d="M62.79,29.172l-28-28C34.009,0.391,32.985,0,31.962,0s-2.047,0.391-2.828,1.172l-28,28c-1.562,1.566-1.484,4.016,0.078,5.578c1.566,1.57,3.855,1.801,5.422,0.234L8,33.617V60c0,2.211,1.789,4,4,4h16V48h8v16h16c2.211,0,4-1.789,4-4V33.695l1.195,1.195c1.562,1.562,3.949,1.422,5.516-0.141C64.274,33.188,64.356,30.734,62.79,29.172z"/>
+          </svg>
+          <div class="nav-link link-body-emphasis px-1">
+            <span>Inicio</span>
+          </div>
+        </a>
+        <a class="nav-link active px-1">
+          <div class="d-flex align-items-center nav-item nav-link active">
+            <svg fill="#ffffff" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" class="me-2" height="25px">
+              <path d="M16 15.503A5.041 5.041 0 1 0 16 5.42a5.041 5.041 0 0 0 0 10.083zm0 2.215c-6.703 0-11 3.699-11 5.5v3.363h22v-3.363c0-2.178-4.068-5.5-11-5.5z"></path>
+            </svg>
+            <span>Perfil</span>
+          </div>
+        </a>
+      </ul>
+      
+      <hr>
+
+      <div class="dropdown">
+        <a href="#" class="d-flex align-items-center link-body-emphasis text-decoration-none dropdown-toggle" data-bs-toggle="dropdown">
+          <img th:src="'data:image/jpeg;base64,'+ ${usuario.foto}" width="32" height="32" class="border border-2 border-primary rounded-circle me-2">
+          <strong><span th:text="${usuario.nombreUsuario}"></span></strong>
+        </a>
+        <ul class="dropdown-menu text-small shadow">
+          <a class="dropdown-item text-danger" href="/logout">Cerrar sesión</a>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Main -->
+    <div class="col-lg" style="display: flex; align-items: center; flex-direction: column; margin-top: 5rem;">
+      <div class="d-flex flex-row align-items-center" style="height: 7rem; width: auto;">
+          <img th:src="'data:image/jpeg;base64,'+ ${foto}" height="75%" class="object-fit-cover border border-3 border-primary rounded-circle">
+          <h2 style="display: inline; margin: 0 1rem;" th:text="${nombre}"></h2>
+          <button type="button" class="btn btn-primary" style="margin:0 1rem;">Seguir</button>
+      </div>
+      <div style="height: 4rem;">
+        <h5 style="display: inline; margin: 1rem;" th:text="'Seguidores: ' + ${seguidores}"></h5>
+        <h5 style="display: inline; margin: 1rem;" th:text="'Siguiendo: ' + ${seguidos}"></h5>
+      </div>
+      <div class="mt-5" style="height: 100%; width: 41.5rem; display: flex; flex-wrap: wrap; gap: 0.5rem;" >
+        <img th:each="publicacion : ${publicaciones}" th:src="'data:image/jpeg;base64,' + ${publicacion.foto}" class="object-fit-cover shadow" style="width: 10rem;">
+      </div>
+    </div>
+  </div>
+</body>
+</html>
